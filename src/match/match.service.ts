@@ -95,7 +95,7 @@ export class MatchService {
             .exec();
 
         if (!match) {
-            throw new Error('Match not found');
+            return { match: null }
         }
 
         const battingTeam = await this.teamModel.findById(match.battingTeam._id).exec();
