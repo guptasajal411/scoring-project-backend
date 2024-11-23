@@ -7,7 +7,7 @@ export class Team extends Document {
     name: string;
 
     @Prop([{ type: Types.ObjectId, ref: "Player" }])
-    players: Types.ObjectId[];
+    players: [{ type: Types.ObjectId, ref: "Player" }];
 
     @Prop({
         type: String,

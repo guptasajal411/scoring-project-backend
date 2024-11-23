@@ -23,8 +23,26 @@ export class MatchService {
     async startNewMatch(): Promise<Match> {
         await this.deleteAllMatches();
         const teams = await this.getAllTeams();
+        teams[0].currentStatus = "batting"
+        teams[0].stats = {
+            totalRuns: 0,
+            totalWickets: 0,
+            extras: 0
+        }
+        teams[1].currentStatus = "bowling"
+        teams[1].stats = {
+            totalRuns: 0,
+            totalWickets: 0,
+            extras: 0
+        }
+        await teams[0].save();
+        await teams[1].save();
         const batsmen = await this.getFirstNPlayers(teams[0]._id as mongoose.Types.ObjectId, 2)
+        await this.playerModel.findOneAndUpdate({ _id: batsmen[0]._id }, { currentStatus: "striker" }).exec();
+        await this.playerModel.findOneAndUpdate({ _id: batsmen[0]._id }, { currentStatus: "non-striker" }).exec();
         const bowler = await this.getFirstNPlayers(teams[0]._id as mongoose.Types.ObjectId, 1)
+        await this.playerModel.findOneAndUpdate({ _id: bowler[0]._id }, { currentStatus: "bowler" }).exec();
+        await this.deliveryModel.deleteMany({}).exec();
         const newMatch = this.matchModel.create({
             battingTeam: teams[0]._id,
             fieldingTeam: teams[1]._id,
@@ -39,12 +57,56 @@ export class MatchService {
                     byes: 0,
                     legByes: 0,
                 },
-                batsman: batsmen[0]._id,
-                bowler: bowler[0]._id,
-                nonStriker: batsmen[1]._id
+                scoreDetails: {
+                    batsman: batsmen[0]._id,
+                    bowler: bowler[0]._id,
+                    nonStriker: batsmen[1]._id,
+                    runs: 0,
+                    wickets: 0
+                }
             }
         });
         return newMatch;
+    }
+
+    async fetchMatchDetails(): Promise<any> {
+        const match = await this.matchModel
+            .findOne()
+            .populate({
+                path: 'battingTeam',
+                populate: {
+                    path: 'players',
+                    model: "Player",
+                    select: "_id name"
+                },
+            })
+            .populate({
+                path: 'fieldingTeam',
+                populate: {
+                    path: 'players',
+                    model: "Player",
+                    select: "_id name"
+                },
+            })
+            .populate({
+                path: 'innings.scoreDetails.batsman innings.scoreDetails.nonStriker innings.scoreDetails.bowler',
+                select: '_id name',
+            })
+            .exec();
+
+        if (!match) {
+            throw new Error('Match not found');
+        }
+
+        const battingTeam = await this.teamModel.findById(match.battingTeam._id).exec();
+        const fieldingTeam = await this.teamModel.findById(match.fieldingTeam._id).exec();
+
+        // Format response
+        const response = {
+            match: match.toObject(),
+        };
+
+        return response;
     }
 
     async getFirstNPlayers(teamId: mongoose.Types.ObjectId, n: number): Promise<mongoose.Types.ObjectId[]> {
@@ -53,7 +115,7 @@ export class MatchService {
                 { $match: { _id: teamId } },
                 { $unwind: "$players" },
                 { $limit: n },
-                { $project: { _id: "$players" } }
+                { $project: { _id: "$players", currentStatus: "$currentStatus" } }
             ])
             .exec();
         return players.map(player => player._id);

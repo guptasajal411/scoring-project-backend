@@ -11,10 +11,6 @@ export class Match extends Document {
 
     @Prop({
         type: {
-            battingTeam: { type: Types.ObjectId, ref: "Team" },
-            fieldingTeam: { type: Types.ObjectId, ref: "Team" },
-            runs: { type: Number, default: 0 },
-            wickets: { type: Number, default: 0 },
             overs: { type: Number, default: 0 },
             ballsYetPlayed: { type: Number, default: 0 },
             extras: {
@@ -23,20 +19,16 @@ export class Match extends Document {
                 byes: { type: Number, default: 0 },
                 legByes: { type: Number, default: 0 },
             },
-            scoreDetails: [
-                {
-                    batsman: { type: Types.ObjectId, ref: "Player" },
-                    bowler: { type: Types.ObjectId, ref: "Player" },
-                    nonStriker: { type: Types.ObjectId, ref: "Player" },
-                    runs: { type: Number, default: 0 },
-                    wickets: { type: Number, default: 0 },
-                },
-            ],
+            scoreDetails: {
+                batsman: { type: Types.ObjectId, ref: "Player" },
+                bowler: { type: Types.ObjectId, ref: "Player" },
+                nonStriker: { type: Types.ObjectId, ref: "Player" },
+                runs: { type: Number, default: 0 },
+                wickets: { type: Number, default: 0 },
+            },
         }
     })
     innings: {
-        runs: number;
-        wickets: number;
         overs: number;
         ballsYetPlayed: number;
         extras: {
@@ -45,9 +37,13 @@ export class Match extends Document {
             byes: number;
             legByes: number;
         };
-        batsman: Types.ObjectId;
-        bowler: Types.ObjectId;
-        nonStriker: Types.ObjectId;
+        scoreDetails: {
+            batsman: { type: Types.ObjectId, ref: "Player" },
+            bowler: { type: Types.ObjectId, ref: "Player" },
+            nonStriker: { type: Types.ObjectId, ref: "Player" },
+            runs: { type: Number, default: 0 },
+            wickets: { type: Number, default: 0 },
+        },
     }[];
 }
 

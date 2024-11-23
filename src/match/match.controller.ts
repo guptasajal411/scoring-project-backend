@@ -7,8 +7,8 @@ export class MatchController {
     constructor(private matchService: MatchService) { }
 
     @Get()
-    async getAllMatches(): Promise<Match[]> {
-        return this.matchService.findAllMatches();
+    async getAllMatches(): Promise<Match> {
+        return this.matchService.fetchMatchDetails();
     }
 
     @Post("new-match")
