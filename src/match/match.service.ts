@@ -69,9 +69,11 @@ export class MatchService {
         return newMatch;
     }
 
-    async fetchMatchDetails(): Promise<any> {
-        const match = await this.matchModel
-            .findOne()
+    async fetchMatchDetails(id?: string): Promise<any> {
+        const matchQuery = id
+            ? this.matchModel.findById(id)
+            : this.matchModel.findOne();
+        const match = await matchQuery
             .populate({
                 path: 'battingTeam',
                 populate: {
@@ -93,19 +95,14 @@ export class MatchService {
                 select: '_id name',
             })
             .exec();
-
         if (!match) {
             return { match: null }
         }
-
         const battingTeam = await this.teamModel.findById(match.battingTeam._id).exec();
         const fieldingTeam = await this.teamModel.findById(match.fieldingTeam._id).exec();
-
-        // Format response
         const response = {
             match: match.toObject(),
         };
-
         return response;
     }
 

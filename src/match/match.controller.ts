@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Controller, Get, Param, Post } from "@nestjs/common";
 import { MatchService } from "./match.service";
 import { Match } from "./schemas/match.schema";
 
@@ -16,4 +16,8 @@ export class MatchController {
         return this.matchService.startNewMatch();
     }
 
+    @Get(":id")
+    async getMatchById(@Param("id") id: string): Promise<Match> {
+        return this.matchService.fetchMatchDetails(id);
+    }
 }
