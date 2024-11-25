@@ -18,12 +18,14 @@ export class Team extends Document {
 
     @Prop({
         type: Object,
-        default: { totalRuns: 0, totalWickets: 0, extras: 0 },
+        default: { totalRuns: 0, totalWickets: 0, extras: 0, overs: 0, maidens: 0 },
     })
     stats: {
         totalRuns: number;
         totalWickets: number;
         extras: number;
+        overs: number;
+        maidens: number;
     };
 }
 

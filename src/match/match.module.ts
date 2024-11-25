@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { MatchController } from './match.controller';
-import { MatchService } from './match.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { MatchSchema } from './schemas/match.schema';
-import { TeamSchema } from './schemas/team.schema';
-import { PlayerSchema } from './schemas/player.schema';
-import { DeliverySchema } from './schemas/delivery.schema';
+import { Module } from "@nestjs/common";
+import { MatchController } from "./match.controller";
+import { MatchService } from "./match.service";
+import { MongooseModule } from "@nestjs/mongoose";
+import { MatchSchema } from "./schemas/match.schema";
+import { TeamSchema } from "./schemas/team.schema";
+import { PlayerSchema } from "./schemas/player.schema";
+import { DeliverySchema } from "./schemas/delivery.schema";
 
 @Module({
     imports: [

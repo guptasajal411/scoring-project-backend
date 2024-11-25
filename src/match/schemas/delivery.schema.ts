@@ -23,6 +23,9 @@ export class Delivery extends Document {
 
     @Prop({ type: String, enum: ["batting", "bowling"], default: "batting" })
     sideEffect: "batting" | "bowling";
+
+    @Prop({ type: Types.ObjectId, ref: "Match", required: true })
+    matchId: Types.ObjectId;
 }
 
 export const DeliverySchema = SchemaFactory.createForClass(Delivery);
