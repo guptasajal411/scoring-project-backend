@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
-@Schema()
+@Schema({ timestamps: true })
 export class Delivery extends Document {
     @Prop({ type: Types.ObjectId, ref: "Player", required: true })
     batsman: Types.ObjectId;
@@ -9,8 +9,9 @@ export class Delivery extends Document {
     @Prop({ type: Types.ObjectId, ref: "Player", required: true })
     bowler: Types.ObjectId;
 
-    @Prop({ type: String, enum: ["normal", "wide", "noball", "bye", "legbye"], required: true })
-    type: "normal" | "wide" | "noball" | "bye" | "legbye";
+    @Prop({ type: String, enum: ["normal", "wide", "noball+bye", "noball+runs", "bye", "legbye", "wicket", "noball+legbye", "bye+overthrow", "runs+overthrow"], required: true })
+    type: "normal" | "wide" | "noball+bye" | "noball+runs" |
+        "bye" | "legbye" | "wicket" | "noball+legbye" | "bye+overthrow" | "runs+overthrow";
 
     @Prop({ type: Boolean, default: false })
     isWicket: boolean;
