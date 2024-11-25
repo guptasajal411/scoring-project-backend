@@ -122,7 +122,6 @@ export class MatchService {
     }
 
     async updateMatchDetails(matchId: string, bowler: string, striker: string, type: 0 | 1 | 2 | 3 | 4 | 6 | "wicket" | "wide" | "noball+bye" | "noball+runs" | "bye+overthrow" | "runs+overthrow" | "noball+legbye"): Promise<any> {
-        console.log(matchId)
         const match = await this.matchModel.findById(matchId);
         if (!match) {
             return { error: true }
@@ -218,7 +217,6 @@ export class MatchService {
             sideEffect: "batting",
             matchId,
         });
-        console.log("fetching updated")
         const updatedMatch = await this.fetchMatchDetails(matchId);
         return updatedMatch;
     }
@@ -280,7 +278,6 @@ export class MatchService {
             matchId,
         });
 
-        console.log("Fetching");
         const updatedMatch = await this.fetchMatchDetails(matchId);
         return updatedMatch;
     }
@@ -329,7 +326,6 @@ export class MatchService {
             matchId
         });
 
-        console.log("fetching wide");
         const updatedMatch = await this.fetchMatchDetails(matchId);
         return updatedMatch;
     }
